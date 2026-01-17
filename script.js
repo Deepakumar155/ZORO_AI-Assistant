@@ -1,4 +1,11 @@
-const WEBHOOK_URL = "YOUR_WEBHOOK_URL";
+const WEBHOOK_URL = "https://n8ndeepak.app.n8n.cloud/webhook/641ad789-3c62-416c-977f-b3a19a32d97e";
+
+// Persistent user ID
+let userId = localStorage.getItem("userId");
+if (!userId) {
+  userId = crypto.randomUUID();
+  localStorage.setItem("userId", userId);
+}
 
 function addMessage(text, sender) {
   const chat = document.getElementById("chat");
@@ -18,10 +25,13 @@ async function sendMessage() {
   input.value = "";
 
   try {
-    const res = await fetch("https://n8ndeepak.app.n8n.cloud/webhook/641ad789-3c62-416c-977f-b3a19a32d97e", {
+    const res = await fetch(WEBHOOK_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ message: text })
+      body: JSON.stringify({
+        message: text,
+        userId: userId
+      })
     });
 
     const data = await res.text();
